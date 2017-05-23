@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
   ("prop_param", po::value<float>(&prop_param),
       "Parameter of the proposal distribution (only works for the exponential and power law proposal distributions).")
   ("verbose,v", "Output log messages.")
-  ("sanitized_input,s", "Assume that the input is sanitized: nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves compuation and storage space.")
+  ("sanitized_input,s", "Assume that the input is sanitized: nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
   ("help,h", "Produce this help message.")
   ;
   po::options_description hidden;

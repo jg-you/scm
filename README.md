@@ -6,9 +6,6 @@ The Simplicial Configuration Model is random [null model](https://en.wikipedia.o
 This repository contains a C++ reference implementation of a [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [arxiv:17xx.yyyy](https://arxiv.org/abs/17xx.yyyy) for more information.<br/>
 A summary of compilation / usage instructions can be found below; but see the [tutorial](tutorial_notebook.ipynb) if you are looking for detailed instructions and examples.
 
-
-This is joint work with [G. Petri](https://github.com/lordgrilo), F. Vaccarino, and [A. Patania](https://github.com/alpatania).
-
 ## Table of content
 
 1. [Compilation](#compilation)
@@ -54,7 +51,14 @@ Here, `-f 10000` specifies that 10000 MCMC move will be applied between each sam
 `seed_facet_list.txt` is the path to the initial condition file (notice how it is the only positional argument).
 
 By default the sampler uses the uniform proposal distribution with L_max = 2 max s,  [see the paper](https://arxiv.org/abs/17xx), but the behavior can be changed.
-We provive two parametrizable proposal distributions, and it is straightforward to implement additionnal ones.
+We provide two parameterizable proposal distributions, and it is straightforward to implement additional ones.
+
+The provided distributions are 
+
+* `exp_prop`: Exponential distribution. Draw L with the p.d.f.  `Pr(l) = exp(lambda * l)/Z` where `lambda` is a parameter, set with `--prop_param LAMBDA`, and `Z` is a normalization constant. `L` is limited to 2,...,L_max.
+* `pl_prop`: Power law distribution. Draw L with the p.d.f.  `Pr(l) = l ** (-\lambda)/Z`. `L` is limited to 2,...,L_max.
+* `unif_prop`: Uniform distribution [**Default**]. Draw L with the p.d.f.  `Pr(l) = 1 /(L_max-2)`. `L` is limited to 2,...,L_max.
+
 
 The full list of options is:
 
@@ -64,19 +68,24 @@ The full list of options is:
     -d [ --seed ] arg                     Seed of the pseudo random number 
                                           generator (Mersenne-twister 19937). 
                                           Seed with time if not specified.
-    -l [ --l_max ] arg                    Manually set L_max. WARNING:
-                                          The correctness of 
+    -l [ --l_max ] arg                    Manually set L_max. The correctness of 
                                           the sampler is not guaranteed if L_max 
-                                          < 2 max s.
+                                          < 2 max s. Defaults to 10% of the sum 
+                                          of facet sizes. 
     --exp_prop                            Use exponential proposal distribution.
     --pl_prop                             Use power law proposal distribution.
-    --unif_prop                           Use uniform proposal distribution [default].
+    --unif_prop                           Use uniform proposal distribution 
+                                          [default].
     --prop_param arg                      Parameter of the proposal distribution 
                                           (only works for the exponential and 
                                           power law proposal distributions).
     -v [ --verbose ]                      Output log messages.
+    -s [ --sanitized_input ]              Assume that the input is sanitized: 
+                                          nodes are labeled via 0 index, 
+                                          contiguous integers; no facets is 
+                                          included in another. Saves computation 
+                                          and storage space.
     -h [ --help ]                         Produce this help message.
-
 
 
 ## Publications
