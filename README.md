@@ -26,6 +26,13 @@ To compile from the terminal, use the following commands:
 
 The resulting binaries will be built in `bin/`. `CMakes` should also allow Windows users to compile the source easily (not tested---let us know!).
 
+If `cmake` is not installed, the following manual compilation lines *should* work (for gcc with `C++11` support):
+
+    g++ -std=c++11 -o3 -c src/scm/scm.cpp -o src/scm/libscm.a  #compile scm library
+    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/mcmc_sampler mcmc_sampler.cpp  #compile the main binaries (mcmc)
+    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/rejection_sampler rejection_sampler.cpp  #compile the main binaries (rejection)
+
+
 ## Using the sampler
 
 The sampler randomizes an initial facet list, and samples uniformly from the space of all simplicial complexes with the same **degree sequence** (degree = number of facet incident on a node) and **size sequence** (size = number of node in a facet).
