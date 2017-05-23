@@ -1,5 +1,7 @@
 # scm
 
+![](scm.png)
+
 The Simplicial Configuration Model is random [null model](https://en.wikipedia.org/wiki/Null_model) for [simplicial complexes](https://en.wikipedia.org/wiki/Simplicial_complex), which can be seen as high-order structures that generalize [simple graphs](http://mathworld.wolfram.com/SimpleGraph.html) (via  multi-node interactions).
 This repository contains a C++ reference implementation of the [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [arxiv:17xx.yyyy](https://arxiv.org/abs/17xx.yyyy) for more information.
 A summary of compilation / usage instructions can be found below; but see the [tutorial][tutorial_notebook.ipynb] if you are looking for detailed instructions and examples.
