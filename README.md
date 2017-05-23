@@ -13,9 +13,9 @@ This is joint work with [G. Petri](https://github.com/lordgrilo), F. Vaccarino, 
 
 1. [Compilation](#compilation)
 2. [Using the sampler](#using-the-sampler)
-  1. [Facet list analyzer](#facet-list-analyzer)
-  2. [MCMC sampler](#mcmc-sampler)
-2. [Publications](#publications)
+    1. [Facet list analyzer](#facet-list-analyzer)
+    2. [MCMC sampler](#mcmc-sampler)
+3. [Publications](#publications)
 
 
 ## Compilation
