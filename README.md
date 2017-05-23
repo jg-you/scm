@@ -27,13 +27,13 @@ To compile from the terminal, use the following commands:
     cmake .;
     make
 
-The resulting binaries will be built in `bin/`. `CMakes` should also windows user to compile the source easily (not tested).
+The resulting binaries will be built in `bin/`. `CMakes` should also allow Windows users to compile the source easily (not tested---let us know!).
 
 ## Using the sampler
 
 The sampler randomizes an initial facet list, and samples uniformly from the space of all simplicial complexes with the same **degree sequence** (degree = number of facet incident on a node) and **size sequence** (size = number of node in a facet).
 As such, it requires an initial facet list.<br/>
-We therefore provide not one, but two important binaries: `facet_list_analyzer` and `mcmc_sampler`.
+We thus provide not one, but two important binaries: `facet_list_analyzer` and `mcmc_sampler`.
 
 ### Facet list analyzer
 
