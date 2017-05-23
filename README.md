@@ -1,0 +1,2 @@
+# scm
+Simplicial Configuration Model
