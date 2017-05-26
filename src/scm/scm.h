@@ -18,7 +18,7 @@
   *
   * This class implements the simplicial configuration model (SCM) ensemble.
   * Simplicial complexes from this ensemble have a fixed maximal facet size
-  * sequence and a simplicial degree sequence. They are maximally random
+  * sequence and a degree sequence. They are maximally random
   * with respect to everything else.
   * 
   * States are internally represented by two adjacency lists, one for vertices
@@ -36,12 +36,12 @@ public:
     * @param[in] <maximal_facets> List of maximal facets, in any ordering.
     */
   scm_t(const adj_list_t & maximal_facets);
-  /** Constructs from a maximal facet size and simplicial degree sequence.
+  /** Constructs from a maximal facet size and  degree sequence.
     * @param[in] <s> Facet size sequence.
-    * @param[in] <d> Simplicial degree sequence.
+    * @param[in] <d> Degree sequence.
     * @warning Assume that s[i], d[i] > 0 for all i. 
-    * @warning The resulting matching will not be simplicial in most cases,
-    *          requires some shuffling until a simplicial state is reached.
+    * @warning The resulting matching will not be sequence-preserving in most cases;
+    *          requires some shuffling until a sequence-preserving state is reached.
     */
   scm_t(const uint_vec_t & s, const uint_vec_t & d);
   //@}
@@ -68,7 +68,7 @@ public:
   bool do_moves(std::vector<mcmc_move_t> moves);
   void apply_mcmc_moves(std::vector<mcmc_move_t> moves);
   void revert_mcmc_moves(std::vector<mcmc_move_t> moves);
-  /// Get a random matching, not necessarily simplicial.
+  /// Get a random matching, not necessarily sequence-preserving.
   void shuffle(std::mt19937& engine);
   //@}
 
