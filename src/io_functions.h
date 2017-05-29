@@ -52,6 +52,11 @@ void output_K(const scm_t& K, std::ostream& os)
   }
 }
 
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+            std::not1(std::ptr_fun<int, int>(std::isspace))));
+}
+
 unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, bool cleansed_input, vmap_t & id_to_vertex)
 {
   std::string line_buffer;
@@ -63,28 +68,32 @@ unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, b
     std::map<std::string, id_t> vertex_to_id; // potentially useless, declase in case the input has to be sanetized
     while (getline(file, line_buffer))
     {
-      std::string vertex;
-      std::stringstream ls(line_buffer);
-      if (!line_buffer.empty())
+      ltrim(line_buffer);
+      if (line_buffer[0] != '#')
       {
-        neighborhood_t neighborhood;
-        while (ls >> vertex)
+        std::string vertex;
+        std::stringstream ls(line_buffer);
+        if (!line_buffer.empty())
         {
-          auto id = vertex_to_id.find(vertex);
-          if (id == vertex_to_id.end())
+          neighborhood_t neighborhood;
+          while (ls >> vertex)
           {
-            vertex_to_id[vertex] = v;
-            id_to_vertex[v] = vertex;
-            neighborhood.insert(v);
-            ++v;
+            auto id = vertex_to_id.find(vertex);
+            if (id == vertex_to_id.end())
+            {
+              vertex_to_id[vertex] = v;
+              id_to_vertex[v] = vertex;
+              neighborhood.insert(v);
+              ++v;
+            }
+            else
+            {
+              neighborhood.insert(id->second);
+            }
           }
-          else
-          {
-            neighborhood.insert(id->second);
-          }
+          maximal_facets.push_back(neighborhood);
+          if (neighborhood.size() > largest_facet) largest_facet = neighborhood.size();
         }
-        maximal_facets.push_back(neighborhood);
-        if (neighborhood.size() > largest_facet) largest_facet = neighborhood.size();
       }
     }
     vertex_to_id.clear();  // only needed to setup id_to_vertex faster.
@@ -136,13 +145,17 @@ unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, b
   {
     while (getline(file, line_buffer))
     {
-      std::stringstream ls(line_buffer);
-      neighborhood_t neighborhood;
-      while (ls >> v) {
-        neighborhood.insert(v);
+      ltrim(line_buffer);
+      if (line_buffer[0] != '#')
+      {
+        std::stringstream ls(line_buffer);
+        neighborhood_t neighborhood;
+        while (ls >> v) {
+          neighborhood.insert(v);
+        }
+        maximal_facets.push_back(neighborhood);
+        if (neighborhood.size() > largest_facet) largest_facet = neighborhood.size();
       }
-      maximal_facets.push_back(neighborhood);
-      if (neighborhood.size() > largest_facet) largest_facet = neighborhood.size();
     }
   }
   return largest_facet; // weird return.. but speed up things a bit
@@ -152,12 +165,19 @@ void read_sequence_file(std::ifstream& file, uint_vec_t & seq)
 {
   seq.clear();
   std::string line_buffer;
-  getline(file, line_buffer);
-  std::stringstream ls(line_buffer);
-  unsigned int x;
-  while (ls >> x)
+  while (getline(file, line_buffer))
   {
-    seq.push_back(x);
+    ltrim(line_buffer);
+    if (line_buffer[0] != '#' &&  !line_buffer.empty())
+    {
+      std::stringstream ls(line_buffer);
+
+      unsigned int x;
+      while (ls >> x)
+      {
+        seq.push_back(x);
+      }
+    }
   }
 }
 

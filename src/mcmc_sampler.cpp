@@ -49,8 +49,8 @@ int main(int argc, char const *argv[])
   ("unif_prop", "Use uniform proposal distribution [default].")
   ("prop_param", po::value<float>(&prop_param),
       "Parameter of the proposal distribution (only works for the exponential and power law proposal distributions).")
+  ("cleansed_input,c", "Assume that the input is already cleansed, i.e., that nodes are labeled with 0 indexed contiguous integers and that no facet is included in another.")
   ("verbose,v", "Output log messages.")
-  ("cleansed_input,c", "Assume that the input is already cleansed, i.e., that nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
   ("help,h", "Produce this help message.")
   ;
   po::options_description hidden;

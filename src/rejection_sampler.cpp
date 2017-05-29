@@ -35,11 +35,9 @@ int main(int argc, char const *argv[])
 
   po::options_description description("Options");
   description.add_options()
-  ("num_samples,n", po::value<unsigned int>(&num_samples)->default_value(1),
-      "Number of samples.")
   ("seed,d", po::value<unsigned int>(&seed),
       "Seed of the pseudo random number generator (Mersenne-twister 19937). Seed with time if not specified.")
-  ("cleansed_input,c", "In facet list mode, assume that the input is already cleansed, i.e., that nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
+  ("cleansed_input,c", "In facet list mode, assume that the input is already cleansed, i.e., that nodes are labeled with 0 indexed contiguous integers and that no facet is included in another.")
   ("degree_seq_file,k", po::value<std::string>(&degree_seq_file),
     "Path to degree sequence file.")
   ("size_seq_file,s", po::value<std::string>(&size_seq_file),
@@ -97,28 +95,25 @@ int main(int argc, char const *argv[])
     /* ~~~~~ Sampling ~~~~~~~*/
     scm_t K(maximal_facets);
     std::mt19937 engine(seed);
-    for (unsigned int i = 0; i < num_samples; ++i)
+    if (var_map.count("verbose"))
     {
-      if (var_map.count("verbose"))
+      unsigned int tries = 1;
+      do
       {
-        unsigned int tries = 1;
-        do
-        {
-          K.shuffle(engine);
-          std::clog << "\rnum_tries: " << tries;
-          ++tries;
-        } while(!K.is_simplicial_complex());
-        std::clog << "\n";
-      }
-      else
-      {
-        do
-        {
-          K.shuffle(engine);
-        } while(!K.is_simplicial_complex());      
-      }
-      output_K(K, std::cout, id_to_vertex);
+        K.shuffle(engine);
+        std::clog << "\rnum_tries: " << tries;
+        ++tries;
+      } while(!K.is_simplicial_complex());
+      std::clog << "\n";
     }
+    else
+    {
+      do
+      {
+        K.shuffle(engine);
+      } while(!K.is_simplicial_complex());      
+    }
+    output_K(K, std::cout, id_to_vertex);
   }
   else 
   {
@@ -140,28 +135,25 @@ int main(int argc, char const *argv[])
     /* ~~~~~ Sampling ~~~~~~~*/
     scm_t K(s, d);
     std::mt19937 engine(seed);
-    for (unsigned int i = 0; i < num_samples; ++i)
+    if (var_map.count("verbose"))
     {
-      if (var_map.count("verbose"))
+      unsigned int tries = 1;
+      do
       {
-        unsigned int tries = 1;
-        do
-        {
-          K.shuffle(engine);
-          std::clog << "\rnum_tries: " << tries;
-          ++tries;
-        } while(!K.is_simplicial_complex());
-        std::clog << "\n";
-      }
-      else
-      {
-        do
-        {
-          K.shuffle(engine);
-        } while(!K.is_simplicial_complex());      
-      }
-      output_K(K, std::cout);
+        K.shuffle(engine);
+        std::clog << "\rnum_tries: " << tries;
+        ++tries;
+      } while(!K.is_simplicial_complex());
+      std::clog << "\n";
     }
+    else
+    {
+      do
+      {
+        K.shuffle(engine);
+      } while(!K.is_simplicial_complex());      
+    }
+    output_K(K, std::cout);
   }
   return EXIT_SUCCESS;
 }

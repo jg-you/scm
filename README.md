@@ -51,17 +51,20 @@ The first (default) takes a single positional argument, the path to a facet list
     # Sample:
     0 1 
     2 3 4 
-    1 2 3 
+    1 2 3
+
+where the output is a facet list.
 
 The second way to call the rejection sampler is in the *sequence mode*.<br>
-This is accomplished by using the flags `--degree_seq_file=path-to-degrees.txt` and `--size_seq_file=path-to-sizes.txt` where `path-to-degrees.txt` and `path-to-sizes.txt` are one **line** files, each containing an sequence of integers.
-There is no known simpliciality test yet, so we make no test on the sequences---convergence is not guaranteed.
+This is accomplished by using the flags `--degree_seq_file=path-to-degrees.txt` and `--size_seq_file=path-to-sizes.txt` where `path-to-degrees.txt` and `path-to-sizes.txt` are paths to files containing the integer sequences (no particular organization required; will use all integers in the file).
+There is no known simpliciality test yet, so we make no test on the sequences---convergence is not guaranteed and the sampler might run forever.
 
 Here is a simple example, using small sequences, which we know are simplicial:
 
     > echo "2 2 2 1 1" > d.txt 
     > echo "3 3 2" > s.txt
-    > bin/rejection_sampler -s s.txt -k d.txt 
+    > bin/rejection_sampler -s s.txt -k d.txt
+    # Sample:
     0 1 4
     0 1 2
     2 3
@@ -72,19 +75,18 @@ Note that we have used the the shorthand flags `-k` and `-s` for the sequences, 
      [Facet list mode] bin/rejection_sampler [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list
      [Seq. mode] bin/rejection_sampler [--option_1=VAL] ... -k path-to-degrees.txt -s path-to-sizes.txt
     Options:
-      -n [ --num_samples ] arg (=1) Number of samples.
       -d [ --seed ] arg             Seed of the pseudo random number generator 
                                     (Mersenne-twister 19937). Seed with time if not
                                     specified.
       -c [ --cleansed_input ]       In facet list mode, assume that the input is 
                                     already cleansed, i.e., that nodes are labeled 
-                                    via 0 index, contiguous integers; no facets is 
-                                    included in another. Saves computation and 
-                                    storage space.
+                                    with 0 indexed contiguous integers and that no 
+                                    facet is included in another.
       -k [ --degree_seq_file ] arg  Path to degree sequence file.
       -s [ --size_seq_file ] arg    Path to size sequence file.
       -v [ --verbose ]              Output log messages.
       -h [ --help ]                 Produce help message.
+
 
 
 ### MCMC sampler
@@ -108,7 +110,7 @@ The provided distributions are
 * `unif_prop`: Uniform distribution [**Default**]. Draw L with the p.d.f.  `Pr(l) = 1 /(L_max-2)`. `L` is limited to 2,...,L_max.
 
 
-*Note*: The sampler can handle arbitrary facet lists as input. However, it is better if facet lists are cleansed from the get go. By clean we mean that nodes are 0 indexed contiguous integers, and there are no included facet.
+*Note*: The sampler can handle arbitrary facet lists as input (lines beginning with `#` will be ignored). However, it is better if facet lists are cleansed from the get go. By clean we mean that nodes are 0 indexed contiguous integers, and there are no included facet.
 If the data is already cleansed, use the flag `-c` to skip the pre-processing cleansing steps. See [scm/utilities/](https://github.com/jg-you/scm/tree/master/utilities) for some lightweight python cleansing tools.
 
 The full list of options for `mcmc_sampler`:
@@ -136,12 +138,11 @@ The full list of options for `mcmc_sampler`:
       --prop_param arg                      Parameter of the proposal distribution 
                                             (only works for the exponential and 
                                             power law proposal distributions).
-      -v [ --verbose ]                      Output log messages.
       -c [ --cleansed_input ]               Assume that the input is already 
                                             cleansed, i.e., that nodes are labeled 
-                                            via 0 index, contiguous integers; no 
-                                            facets is included in another. Saves 
-                                            computation and storage space.
+                                            with 0 indexed contiguous integers and 
+                                            that no facet is included in another.
+      -v [ --verbose ]                      Output log messages.
       -h [ --help ]                         Produce this help message.
 
 ## Publications
