@@ -5,14 +5,13 @@ Facet lists for the datasets analyzed in [arxiv:17xx.yyyy](https://arxiv.org/abs
 **Format**: One facet appears on each line, as whitespaced list of strings.<br>
 The sampler skips a lot of pre-processing if vertices are identified with contiguous 0 indexed integers (use the `-s` flag).
 
-Multiple transformations separate the provided facet lists from the original datasets:
+Multiple transformations separate the facet lists used in the paper (`crime_facet_list.txt,diseasome_facet_list.txt,pollinators_facet_list.txt`) from the original datasets:
 
 1. we have relabeled the nodes;
 2. the datasets were originally bipartite graphs;
 3. the facet lists are [*pruned*](../utilities/prune.py), i.e., we remove any face included in a larger face upon projection.
 
-
-# References
+The `olesen_2002.txt` dataset is mostly provided as a test of the built-in data cleansing options of the sampler, and has not been touched (we projected the graph onto an hypergaph, but have not removed any included facets).
 
 Original references to the datasets
 
