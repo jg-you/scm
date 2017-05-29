@@ -87,11 +87,11 @@ The full list of options is:
                                           (only works for the exponential and 
                                           power law proposal distributions).
     -v [ --verbose ]                      Output log messages.
-    -s [ --sanitized_input ]              Assume that the input is sanitized: 
-                                          nodes are labeled via 0 index, 
-                                          contiguous integers; no facets is 
-                                          included in another. Saves computation 
-                                          and storage space.
+    -c [ --cleansed_input ]               Assume that the input is already 
+                                          cleansed, i.e., that nodes are labeled 
+                                          via 0 index, contiguous integers; no 
+                                          facets is included in another. Saves 
+                                          computation and storage space.
     -h [ --help ]                         Produce this help message.
 
 

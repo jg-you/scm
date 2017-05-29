@@ -50,7 +50,7 @@ int main(int argc, char const *argv[])
   ("prop_param", po::value<float>(&prop_param),
       "Parameter of the proposal distribution (only works for the exponential and power law proposal distributions).")
   ("verbose,v", "Output log messages.")
-  ("sanitized_input,s", "Assume that the input is sanitized: nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
+  ("cleansed_input,c", "Assume that the input is already cleansed, i.e., that nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
   ("help,h", "Produce this help message.")
   ;
   po::options_description hidden;
@@ -94,7 +94,7 @@ int main(int argc, char const *argv[])
   vmap_t id_to_vertex;
   std::ifstream file(facet_list_path.c_str());
   if (!file.is_open()) return EXIT_FAILURE;
-  unsigned int largest_facet = read_facet_list(maximal_facets, file, var_map.count("sanitized_input") != 0, id_to_vertex);
+  unsigned int largest_facet = read_facet_list(maximal_facets, file, var_map.count("cleansed_input") != 0, id_to_vertex);
   file.close();
 
 
@@ -141,7 +141,7 @@ int main(int argc, char const *argv[])
     else {std::clog << "uniform\n";}
     std::clog << "\tprop_param: " << prop_param << "\n";
     std::clog << "\tsanitize: ";
-    if (var_map.count("sanitized_input") > 0) {std::clog << "no\n";}
+    if (var_map.count("cleansed_input") > 0) {std::clog << "no\n";}
     else {std::clog << " yes\n";}
   }
   // Burn-in

@@ -3,9 +3,9 @@
 Facet lists for the datasets analyzed in [arxiv:17xx.yyyy](https://arxiv.org/abs/17xx.yyyy), as well as two simple examples (`simple_facet_list.txt` and `olesen_2002.txt`).
 
 **Format**: One facet appears on each line, as whitespaced list of strings.<br>
-The sampler skips a lot of pre-processing if vertices are identified with contiguous 0 indexed integers (use the `-s` flag).
+The sampler skips a lot of pre-processing if vertices are identified with contiguous 0 indexed integers (use the `--cleansed_input` flag).
 
-Multiple transformations separate the facet lists used in the paper (`crime_facet_list.txt,diseasome_facet_list.txt,pollinators_facet_list.txt`) from the original datasets:
+Multiple transformations separate the facet lists used in the paper (`crime_facet_list.txt`,`diseasome_facet_list.txt`,`pollinators_facet_list.txt`) from the original datasets:
 
 1. we have relabeled the nodes;
 2. the datasets were originally bipartite graphs;
