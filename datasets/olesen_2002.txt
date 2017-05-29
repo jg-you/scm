@@ -1,0 +1,12 @@
+Azorina~vidalii Solidago~sempervivens Daucus~carota Silene~vulgaris Chamomilla~suaveolens Reseda~luteola
+Azorina~vidalii Crithmum~maritimum Beta~vulgaris Silene~vulgaris
+Solidago~sempervivens
+Azorina~vidalii Lotus~corniculatus Freesia~refracta
+Azorina~vidalii Lotus~corniculatus Freesia~refracta
+Azorina~vidalii Crithmum~maritimum  Daucus~carota  Chamomilla~suaveolens
+Azorina~vidalii Lotus~corniculatus Reseda~luteola
+Crithmum~maritimum Daucus~carota
+Azorina~vidalii
+Chamomilla~suaveolens
+Azorina~vidalii
+Crithmum~maritimum  

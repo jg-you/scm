@@ -7,12 +7,10 @@
 #include <cstdlib>   // EXIT_FAILURE, EXIT_SUCCESS
 #include <iostream>
 #include <fstream> // handle facet_list text file
-#include <sstream> // handle facet_list text file
 #include <cmath>   // pow, exp
 #include <chrono>  // high_resolution_clock
 #include <vector>
 #include <random>  // mt19937
-#include <string>
 #include <algorithm>  // max
 // Boost
 #include <boost/program_options.hpp>    
@@ -20,7 +18,7 @@
 // Program headers
 #include "types.h"
 #include "scm/scm.h"
-#include "sampling/mcmc.h"
+#include "io_functions.h"
 
 namespace po = boost::program_options;
 
@@ -34,7 +32,6 @@ int main(int argc, char const *argv[])
   unsigned int seed = 0;
   unsigned int L_max = 0;
   float prop_param = 1;
-
   po::options_description description("Options");
   description.add_options()
   ("burn_in,b", po::value<unsigned int>(&burn_in)->default_value(1000),
@@ -86,42 +83,31 @@ int main(int argc, char const *argv[])
       return EXIT_FAILURE;
   }
   if (var_map.count("seed") == 0) {
-      // seeding based on the clock
       seed = (unsigned int) std::chrono::high_resolution_clock::now().time_since_epoch().count();
   }
 
+
+
   /* ~~~~~ Load max. facets ~~~~~~~*/
   if (var_map.count("exp_prop") > 0) std::clog << "Loading facet file.\n";
-  unsigned int largest_facet = 0;
   adj_list_t maximal_facets;
-  { // load facets
-    std::ifstream file(facet_list_path.c_str());
-    if (!file.is_open()) return EXIT_FAILURE;
-    std::string line_buffer;
-    unsigned int vertex;
-    while (getline(file, line_buffer))
-    {
-      std::stringstream ls(line_buffer);
-      neighborhood_t neighborhood;
-      while (ls >> vertex) {
-        neighborhood.insert(vertex);
-      }
-      maximal_facets.push_back(neighborhood);
-      if (neighborhood.size() > largest_facet) largest_facet = neighborhood.size();
-    }
-    file.close();
-  }
+  vmap_t id_to_vertex;
+  std::ifstream file(facet_list_path.c_str());
+  if (!file.is_open()) return EXIT_FAILURE;
+  unsigned int largest_facet = read_facet_list(maximal_facets, file, var_map.count("sanitized_input") != 0, id_to_vertex);
+  file.close();
 
-  /* ~~~~~ Declare sampler ~~~~~~~*/
+
+
+  /* ~~~~~ Sampling ~~~~~~~*/
   scm_t K(maximal_facets);
   std::mt19937 engine(seed);
-  simplicial_complex_generator sampler(sampling_frequency, sampling_steps);
-
+  // prepare proposal distribution
   if (var_map.count("l_max") == 0) 
   {
-    L_max = std::max((unsigned int) 0.1 * K.M(), 2 * largest_facet);
+    L_max = std::min(std::max((unsigned int) 0.1 * K.M(), 2 * largest_facet), K.M());
   }
-  if (L_max < 2 * largest_facet)
+  if (L_max < 2 * largest_facet && var_map.count("l_max") > 0)
   {
     std::clog << "Warning: Manually set L_max does not guarantee connectivity. ("<< L_max << " < " << 2 * largest_facet << ")\n";
   }
@@ -139,11 +125,12 @@ int main(int argc, char const *argv[])
     for (unsigned int l = 2; l <= L_max; ++l) weights[l] = 1;
   }
   std::discrete_distribution<> rand_int(weights.begin(), weights.end());
-
+  // finally ready to output params (need initialized proposal for that)
   if (var_map.count("verbose"))
   {
     std::clog << "Parameters:\n";
     std::clog << "\tfacet_list_path: " << facet_list_path << "\n";
+    std::clog << "\tburn_in: " << burn_in << "\n";
     std::clog << "\tsampling_steps: " << sampling_steps << "\n";
     std::clog << "\tsampling_frequency: " << sampling_frequency << "\n";
     std::clog << "\tseed: " << seed << "\n";
@@ -157,14 +144,31 @@ int main(int argc, char const *argv[])
     if (var_map.count("sanitized_input") > 0) {std::clog << "no\n";}
     else {std::clog << " yes\n";}
   }
-
-  // ~~~~~~~~~~~~~~~~ Burn-in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // Burn-in
   if (var_map.count("verbose")) std::clog << "Burn-in in progress\n";
-  sampler.burnin(K, engine, rand_int, burn_in);
-
-  // ~~~~~~~~~~~~~~~~ Smapling ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  for (unsigned int t = 0; t < burn_in;)
+  {
+    unsigned int l = rand_int(engine);
+    auto moves = K.random_rewire(l, engine);
+    if (K.do_moves(moves)) ++t;
+  }
+  // Sample
   if (var_map.count("verbose")) std::clog << "Starting sampling\n";  
-  float acceptance_ratio = sampler.run(K, engine, rand_int, std::cout);
+  unsigned int accepted = 0;
+  for (unsigned int t = 1; t < sampling_steps * sampling_frequency + 1; ++t)
+  {
+    unsigned int l = rand_int(engine);
+    auto moves = K.random_rewire(l, engine);
+    if (K.do_moves(moves))
+    {
+      ++accepted;
+    } 
+    if (t % sampling_frequency == 0)
+    {
+      output_K(K, std::cout, id_to_vertex);
+    }
+  }
+  float acceptance_ratio = float(accepted) / float(sampling_steps * sampling_frequency);
   if (var_map.count("verbose"))
   {
     std::clog << "# acceptance_ratio=" << acceptance_ratio << "\n";

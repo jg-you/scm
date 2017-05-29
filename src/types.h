@@ -1,6 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <map>
 #include <vector>
 #include <set>
 #include <utility>
@@ -25,5 +26,5 @@ typedef std::vector<float> float_vec_t;
 typedef std::vector< std::vector<unsigned int> > uint_mat_t;
 typedef std::vector< std::vector<int> > int_mat_t;
 typedef std::vector< std::vector<float> > float_mat_t;
-
+typedef std::map<id_t, std::string> vmap_t;
 #endif // TYPES_H
