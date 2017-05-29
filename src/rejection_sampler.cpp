@@ -20,7 +20,6 @@
 // Program headers
 #include "types.h"
 #include "scm/scm.h"
-#include "sampling/rejection.h"
 
 namespace po = boost::program_options;
 
