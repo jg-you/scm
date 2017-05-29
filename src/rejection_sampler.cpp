@@ -20,6 +20,7 @@
 // Program headers
 #include "types.h"
 #include "scm/scm.h"
+#include "io_functions.h"
 
 namespace po = boost::program_options;
 
@@ -27,7 +28,6 @@ int main(int argc, char const *argv[])
 {
   /* ~~~~~ Program options ~~~~~~~*/
   std::string facet_list_path;
-  std::string separator;
   unsigned int num_samples;
   unsigned int seed;
 
@@ -35,11 +35,10 @@ int main(int argc, char const *argv[])
   description.add_options()
   ("num_samples,n", po::value<unsigned int>(&num_samples)->default_value(1),
       "Number of samples.")
-  ("separator,s", po::value<std::string>(&separator)->default_value("#######"), 
-      "Output separator.")
   ("seed,d", po::value<unsigned int>(&seed),
       "Seed of the pseudo random number generator (Mersenne-twister 19937). Seed with time if not specified.")
   ("verbose,v", "Output log messages.")
+  ("cleansed_input,c", "Assume that the input is already cleansed, i.e., that nodes are labeled via 0 index, contiguous integers; no facets is included in another. Saves computation and storage space.")
   ("help,h", "Produce help message.")
   ;
   po::options_description hidden;
@@ -75,49 +74,42 @@ int main(int argc, char const *argv[])
       // seeding based on the clock
       seed = (unsigned int) std::chrono::high_resolution_clock::now().time_since_epoch().count();
   }
+
+
   /* ~~~~~ Load max. facets ~~~~~~~*/
-  if (var_map.count("verbose")) {std::clog << "Loading facet file.\n";}
+  if (var_map.count("exp_prop") > 0) std::clog << "Loading facet file.\n";
   adj_list_t maximal_facets;
-  { // load facets
-    std::ifstream file(facet_list_path.c_str());
-    if (!file.is_open()) return EXIT_FAILURE;
-    std::string line_buffer;
-    unsigned int vertex;
-    while (getline(file, line_buffer))
-    {
-      std::stringstream ls(line_buffer);
-      neighborhood_t neighborhood;
-      while (ls >> vertex) {
-        neighborhood.insert(vertex);
-      }
-      maximal_facets.push_back(neighborhood);
-    }
-    file.close();
-  }
-  // Construct everything
+  vmap_t id_to_vertex;
+  std::ifstream file(facet_list_path.c_str());
+  if (!file.is_open()) return EXIT_FAILURE;
+  unsigned int largest_facet = read_facet_list(maximal_facets, file, var_map.count("cleansed_input") != 0, id_to_vertex);
+  file.close();
+
+
+  /* ~~~~~ Sampling ~~~~~~~*/
   scm_t K(maximal_facets);
   std::mt19937 engine(seed);
-  rejection_sampler_t* sampler;
-  if (var_map.count("verbose"))
-  {
-    std::clog << " F = " << K.F() << "\n";
-    std::clog << " N = " << K.N() << "\n";
-    std::clog << " M = " << K.M() << "\n";
-  }
-
   for (unsigned int i = 0; i < num_samples; ++i)
   {
-    sampler -> randomize(K, engine);
-    // Output 
-    for (id_t f = 0; f < K.F(); ++f)
+    if (var_map.count("verbose") > 0)
     {
-      for (auto v: K.facet_neighbors(f))
+      unsigned int tries = 1;
+      do
       {
-        std::cout << v << " ";
-      }
-      std::cout << "\n";
+        K.shuffle(engine);
+        std::clog << "\rnum_tries: " << tries;
+        ++tries;
+      } while(!K.is_simplicial_complex());
+      std::clog << "\n";
     }
-    std::cout << separator + "\n";
+    else
+    {
+      do
+      {
+        K.shuffle(engine);
+      } while(!K.is_simplicial_complex());      
+    }
+    output_K(K, std::cout, id_to_vertex);
   }
   return EXIT_SUCCESS;
 }

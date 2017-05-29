@@ -40,12 +40,12 @@ void output_K(const scm_t& K, std::ostream& os,  vmap_t & id_to_vertex)
   }
 }
 
-unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, bool sanitized_input, vmap_t & id_to_vertex)
+unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, bool cleansed_input, vmap_t & id_to_vertex)
 {
   std::string line_buffer;
   id_t v = 0;
   unsigned int largest_facet = 0;
-  if (!sanitized_input)
+  if (!cleansed_input)
   {
     // read facet list and setup map
     std::map<std::string, id_t> vertex_to_id; // potentially useless, declase in case the input has to be sanetized
