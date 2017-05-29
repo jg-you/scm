@@ -68,7 +68,7 @@ int main(int argc, char const *argv[])
   {
       std::cout << "Usage:\n"
                 << " [Facet list mode] "+std::string(argv[0])+" [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list\n"
-                << " [Sequences mode] "+std::string(argv[0])+" [--option_1=VAL] ... [--option_n=VAL] -k path-to-degrees.txt -s path-to-sizes.txt\n";
+                << " [Seq. mode] "+std::string(argv[0])+" [--option_1=VAL] ... -k path-to-degrees.txt -s path-to-sizes.txt\n";
       std::cout << description;
       return EXIT_SUCCESS;
   }

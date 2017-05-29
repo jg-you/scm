@@ -36,36 +36,28 @@ If `cmake` is not installed, the following manual compilation lines *should* wor
 ## Using the sampler
 
 The sampler randomizes an initial facet list, and samples uniformly from the space of all simplicial complexes with the same **degree sequence** (degree = number of facet incident on a node) and **size sequence** (size = number of node in a facet).
-As such, it requires an initial facet list.<br/>
+As such, it requires an initial facet list, either artificial or taken from a real system.<br/>
 We thus provide not one, but two important binaries: `rejection_sampler` and `mcmc_sampler`.
 
 ### Rejection sampler
 
-The rejection method samples uniformly from a space that is much larger than the support of the SCM (bipartite graphs with fixed degree and size sequences, see the  [paper](https://arxiv.org/abs/17xx.yyyy)).
-It only returns samples when they fall in the sampling space. As such it samples uniformly from the SCM, albeit very inefficiently.
-However, since there is yet no known constructive procedure to generate instances from sequences directly, the rejection sampler can be used to find **one** instance, which can then be used as the seed of the much more efficient [MCMC sampler](#mcmc-sampler).
+The rejection method is a very **inefficient** sampler for the SCM, see our [paper](https://arxiv.org/abs/17xx.yyyy).
+However, since there is---so far---no known constructive procedure to generate SCM instances directly from sequences, it can be used to find **one** instance, which is then plugged into the much more efficient [MCMC sampler](#mcmc-sampler) as an initial condition.
 
 There are two ways to call `bin/rejection_sampler`.<br>
 The first (default) takes a single positional argument, the path to a facet list, and tries to sample from the associated SCM ensemble:
 
-    > bin/rejection_sampler datasets/simple_facet_list.txt  -n 2
+    > bin/rejection_sampler datasets/simple_facet_list.txt  
     # Sample:
     0 1 
     2 3 4 
     1 2 3 
-    # Sample:
-    0 2 
-    1 2 3 
-    1 3 4 
 
-Here we have also used the flag `-n 2` to indicate that we needed 2 samples. 
-
-The second way to call the rejection sampler is in the *sequence mode*.
-In this mode, it generates simplicial complexes directly from sequences.<br>
-This is accomplished by using the flags `--degree_seq_file=path-to-degrees.txt` and `--size_seq_file=path-to-sizes.txt`  (or with the shorthand flags `-k` and `-s`, resp.) where `path-to-degrees.txt` and `path-to-sizes.txt` are one **line** files, each containing one integer per line (the sequences).
+The second way to call the rejection sampler is in the *sequence mode*.<br>
+This is accomplished by using the flags `--degree_seq_file=path-to-degrees.txt` and `--size_seq_file=path-to-sizes.txt` where `path-to-degrees.txt` and `path-to-sizes.txt` are one **line** files, each containing an sequence of integers.
 There is no known simpliciality test yet, so we make no test on the sequences---convergence is not guaranteed.
 
-Here is a simple example, for small sequences, which we know are simplicial:
+Here is a simple example, using small sequences, which we know are simplicial:
 
     > echo "2 2 2 1 1" > d.txt 
     > echo "3 3 2" > s.txt
@@ -74,36 +66,37 @@ Here is a simple example, for small sequences, which we know are simplicial:
     0 1 2
     2 3
 
-The full list of option is:
-  Usage:
-   [Facet list mode] bin/rejection_sampler [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list
-   [Sequences mode] bin/rejection_sampler [--option_1=VAL] ... [--option_n=VAL] -k path-to-degrees.txt -s path-to-sizes.txt
-  Options:
-    -n [ --num_samples ] arg (=1) Number of samples.
-    -d [ --seed ] arg             Seed of the pseudo random number generator 
-                                  (Mersenne-twister 19937). Seed with time if not
-                                  specified.
-    -c [ --cleansed_input ]       In facet list mode, assume that the input is 
-                                  already cleansed, i.e., that nodes are labeled 
-                                  via 0 index, contiguous integers; no facets is 
-                                  included in another. Saves computation and 
-                                  storage space.
-    -k [ --degree_seq_file ] arg  Path to degree sequence file.
-    -s [ --size_seq_file ] arg    Path to size sequence file.
-    -v [ --verbose ]              Output log messages.
-    -h [ --help ]                 Produce help message.
+Note that we have used the the shorthand flags `-k` and `-s` for the sequences, see the full list of option for `rejection_sampler` below:
 
-
+    Usage:
+     [Facet list mode] bin/rejection_sampler [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list
+     [Seq. mode] bin/rejection_sampler [--option_1=VAL] ... -k path-to-degrees.txt -s path-to-sizes.txt
+    Options:
+      -n [ --num_samples ] arg (=1) Number of samples.
+      -d [ --seed ] arg             Seed of the pseudo random number generator 
+                                    (Mersenne-twister 19937). Seed with time if not
+                                    specified.
+      -c [ --cleansed_input ]       In facet list mode, assume that the input is 
+                                    already cleansed, i.e., that nodes are labeled 
+                                    via 0 index, contiguous integers; no facets is 
+                                    included in another. Saves computation and 
+                                    storage space.
+      -k [ --degree_seq_file ] arg  Path to degree sequence file.
+      -s [ --size_seq_file ] arg    Path to size sequence file.
+      -v [ --verbose ]              Output log messages.
+      -h [ --help ]                 Produce help message.
 
 
 ### MCMC sampler
 
-Once we have an initial condition (either by using the rejection sampler or a real system), using the MCMC sampler is done like so:
+Once we have an initial condition (either by using the rejection sampler or a real system), the MCMC is called with the following commad:
 
     bin/mcmc_sampler -f 10000 -b 2000 -t 200 -d 42 seed_facet_list.txt
 
 Here, `-f 10000` specifies that 10000 MCMC move will be applied between each samples (*the sampling frequency*), `-b 2000` specifies that the [*burn-in time*](https://en.wikipedia.org/wiki/Gibbs_sampling#Implementation) equals 2000 (the number of steps to ignore away before sampling begins), `-t 200` sets the number of samples to 200, and `-d 42` sets the seeds of the RNG to `42` (it will be seeded with the time by default).
 `seed_facet_list.txt` is the path to the initial condition file (notice how it is the only positional argument).
+
+*Note*: All the above commands have sensible default values and can be omitted.
 
 By default the sampler uses the uniform proposal distribution with L_max = 2 max s,  [see the paper](https://arxiv.org/abs/17xx), but the behavior can be changed.
 We provide two parameterizable proposal distributions, and it is straightforward to implement additional ones.
@@ -115,39 +108,41 @@ The provided distributions are
 * `unif_prop`: Uniform distribution [**Default**]. Draw L with the p.d.f.  `Pr(l) = 1 /(L_max-2)`. `L` is limited to 2,...,L_max.
 
 
-*Note* The sampler can handle arbitrary facet lists as input. However, it is better if facet lists are cleansed from the get go. By clean we mean that nodes are 0 indexed contiguous integers, and there are no included facet.
+*Note*: The sampler can handle arbitrary facet lists as input. However, it is better if facet lists are cleansed from the get go. By clean we mean that nodes are 0 indexed contiguous integers, and there are no included facet.
 If the data is already cleansed, use the flag `-c` to skip the pre-processing cleansing steps. See [scm/utilities](scm/utitilies) for some lightweight python cleansing tools.
 
-The full list of options is:
+The full list of options for `mcmc_sampler`:
 
-    -b [ --burn_in ] arg                  Burn-in time. Defaults to M log M, 
-                                          where M is the sum of degrees.
-    -t [ --sampling_steps ] arg           Number of sampling steps.
-    -f [ --sampling_frequency ] arg (=10) Number of step between each sample. 
-                                          Defaults to M log M, where M is the sum
-                                          of degrees.
-    -d [ --seed ] arg                     Seed of the pseudo random number 
-                                          generator (Mersenne-twister 19937). 
-                                          Seed with time if not specified.
-    -l [ --l_max ] arg                    Manually set L_max. The correctness of 
-                                          the sampler is not guaranteed if L_max 
-                                          < 2 max s. Defaults to 10% of the sum 
-                                          of facet sizes. 
-    --exp_prop                            Use exponential proposal distribution.
-    --pl_prop                             Use power law proposal distribution.
-    --unif_prop                           Use uniform proposal distribution 
-                                          [default].
-    --prop_param arg                      Parameter of the proposal distribution 
-                                          (only works for the exponential and 
-                                          power law proposal distributions).
-    -v [ --verbose ]                      Output log messages.
-    -c [ --cleansed_input ]               Assume that the input is already 
-                                          cleansed, i.e., that nodes are labeled 
-                                          via 0 index, contiguous integers; no 
-                                          facets is included in another. Saves 
-                                          computation and storage space.
-    -h [ --help ]                         Produce this help message.
-
+    Usage:
+      bin/mcmc_sampler [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list
+    Options:
+      -b [ --burn_in ] arg                  Burn-in time. Defaults to M log M, 
+                                            where M is the sum of degrees.
+      -t [ --sampling_steps ] arg           Number of sampling steps.
+      -f [ --sampling_frequency ] arg (=10) Number of step between each sample. 
+                                            Defaults to M log M, where M is the sum
+                                            of degrees.
+      -d [ --seed ] arg                     Seed of the pseudo random number 
+                                            generator (Mersenne-twister 19937). 
+                                            Seed with time if not specified.
+      -l [ --l_max ] arg                    Manually set L_max. The correctness of 
+                                            the sampler is not guaranteed if L_max 
+                                            < 2 max s. Defaults to 10% of the sum 
+                                            of facet sizes. 
+      --exp_prop                            Use exponential proposal distribution.
+      --pl_prop                             Use power law proposal distribution.
+      --unif_prop                           Use uniform proposal distribution 
+                                            [default].
+      --prop_param arg                      Parameter of the proposal distribution 
+                                            (only works for the exponential and 
+                                            power law proposal distributions).
+      -v [ --verbose ]                      Output log messages.
+      -c [ --cleansed_input ]               Assume that the input is already 
+                                            cleansed, i.e., that nodes are labeled 
+                                            via 0 index, contiguous integers; no 
+                                            facets is included in another. Saves 
+                                            computation and storage space.
+      -h [ --help ]                         Produce this help message.
 
 ## Publications
 
