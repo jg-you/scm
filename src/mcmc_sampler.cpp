@@ -34,12 +34,12 @@ int main(int argc, char const *argv[])
   float prop_param = 1;
   po::options_description description("Options");
   description.add_options()
-  ("burn_in,b", po::value<unsigned int>(&burn_in)->default_value(1000),
-      "Burn-in time.")
-  ("sampling_steps,t", po::value<unsigned int>(&sampling_steps)->default_value(1000),
+  ("burn_in,b", po::value<unsigned int>(&burn_in),
+      "Burn-in time. Defaults to M log M, where M is the sum of degrees.")
+  ("sampling_steps,t", po::value<unsigned int>(&sampling_steps),
       "Number of sampling steps.")
   ("sampling_frequency,f", po::value<unsigned int>(&sampling_frequency)->default_value(10),
-      "Number of step between each sample.")
+      "Number of step between each sample. Defaults to M log M, where M is the sum of degrees.")
   ("seed,d", po::value<unsigned int>(&seed),
       "Seed of the pseudo random number generator (Mersenne-twister 19937). Seed with time if not specified.")
   ("l_max,l", po::value<unsigned int>(&L_max),
@@ -70,26 +70,26 @@ int main(int argc, char const *argv[])
           run(),
           var_map);
   po::notify(var_map);
-  if (var_map.count("help") > 0 || argc == 1)
+  if (var_map.count("help") || argc == 1)
   {
       std::cout << "Usage:\n"
                 << "  "+std::string(argv[0])+" [--option_1=VAL] ... [--option_n=VAL] path-to-facet-list\n";
       std::cout << description;
       return EXIT_SUCCESS;
   }
-  if (var_map.count("facet_list_path") == 0)
+  if (!var_map.count("facet_list_path"))
   {
       std::cerr << "No facet list given.\n";
       return EXIT_FAILURE;
   }
-  if (var_map.count("seed") == 0) {
+  if (!var_map.count("seed")) {
       seed = (unsigned int) std::chrono::high_resolution_clock::now().time_since_epoch().count();
   }
 
 
 
   /* ~~~~~ Load max. facets ~~~~~~~*/
-  if (var_map.count("exp_prop") > 0) std::clog << "Loading facet file.\n";
+  if (var_map.count("verbose")) std::clog << "Loading facet file.\n";
   adj_list_t maximal_facets;
   vmap_t id_to_vertex;
   std::ifstream file(facet_list_path.c_str());
@@ -103,16 +103,16 @@ int main(int argc, char const *argv[])
   scm_t K(maximal_facets);
   std::mt19937 engine(seed);
   // prepare proposal distribution
-  if (var_map.count("l_max") == 0) 
+  if (!var_map.count("l_max")) 
   {
     L_max = std::min(std::max((unsigned int) 0.1 * K.M(), 2 * largest_facet), K.M());
   }
-  if (L_max < 2 * largest_facet && var_map.count("l_max") > 0)
+  if (L_max < 2 * largest_facet && var_map.count("l_max"))
   {
     std::clog << "Warning: Manually set L_max does not guarantee connectivity. ("<< L_max << " < " << 2 * largest_facet << ")\n";
   }
   std::vector<double> weights(L_max + 1, 0);
-  if (var_map.count("exp_prop") > 0)
+  if (var_map.count("exp_prop"))
   {
     for (unsigned int l = 2; l <= L_max; ++l) weights[l] = exp(l * prop_param);
   }
@@ -125,6 +125,16 @@ int main(int argc, char const *argv[])
     for (unsigned int l = 2; l <= L_max; ++l) weights[l] = 1;
   }
   std::discrete_distribution<> rand_int(weights.begin(), weights.end());
+
+
+  if (!var_map.count("sampling_frequency"))
+  {
+    sampling_frequency = (unsigned int) K.M() * std::log(K.M());
+  }
+  if (!var_map.count("burn_in"))
+  {
+    burn_in = (unsigned int) K.M() * std::log(K.M());
+  }
   // finally ready to output params (need initialized proposal for that)
   if (var_map.count("verbose"))
   {
@@ -136,12 +146,12 @@ int main(int argc, char const *argv[])
     std::clog << "\tseed: " << seed << "\n";
     std::clog << "\tL_max: " << L_max << "\n";
     std::clog << "\tproposal_distribution: ";
-    if (var_map.count("exp_prop") > 0) {std::clog << "exponential\n";}
-    else if (var_map.count("pl_prop") > 0) {std::clog << "power law\n";}
+    if (var_map.count("exp_prop")) {std::clog << "exponential\n";}
+    else if (var_map.count("pl_prop")) {std::clog << "power law\n";}
     else {std::clog << "uniform\n";}
     std::clog << "\tprop_param: " << prop_param << "\n";
     std::clog << "\tsanitize: ";
-    if (var_map.count("cleansed_input") > 0) {std::clog << "no\n";}
+    if (var_map.count("cleansed_input")) {std::clog << "no\n";}
     else {std::clog << " yes\n";}
   }
   // Burn-in

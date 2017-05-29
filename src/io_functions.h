@@ -13,7 +13,7 @@
 #include "scm/scm.h"
 
 
-void output_K(const scm_t& K, std::ostream& os,  vmap_t & id_to_vertex)
+void output_K(const scm_t& K, std::ostream& os, const  vmap_t & id_to_vertex)
 {
   os << "# Sample:" << std::endl;
   if (id_to_vertex.size() == 0)
@@ -33,10 +33,22 @@ void output_K(const scm_t& K, std::ostream& os,  vmap_t & id_to_vertex)
     {
       for (auto v: K.facet_neighbors(f))
       {
-        os << id_to_vertex[v] << " ";
+        os << id_to_vertex.at(v) << " ";
       }
       os << std::endl;
     }
+  }
+}
+void output_K(const scm_t& K, std::ostream& os)
+{
+  os << "# Sample:" << std::endl;
+  for (id_t f = 0; f < K.F(); ++f)
+  {
+    for (auto v: K.facet_neighbors(f))
+    {
+      os << v << " ";
+    }
+    os << std::endl;
   }
 }
 
@@ -135,4 +147,18 @@ unsigned int read_facet_list(adj_list_t & maximal_facets, std::ifstream& file, b
   }
   return largest_facet; // weird return.. but speed up things a bit
 }
+
+void read_sequence_file(std::ifstream& file, uint_vec_t & seq)
+{
+  seq.clear();
+  std::string line_buffer;
+  getline(file, line_buffer);
+  std::stringstream ls(line_buffer);
+  unsigned int x;
+  while (ls >> x)
+  {
+    seq.push_back(x);
+  }
+}
+
 #endif
