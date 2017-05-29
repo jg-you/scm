@@ -109,7 +109,7 @@ The provided distributions are
 
 
 *Note*: The sampler can handle arbitrary facet lists as input. However, it is better if facet lists are cleansed from the get go. By clean we mean that nodes are 0 indexed contiguous integers, and there are no included facet.
-If the data is already cleansed, use the flag `-c` to skip the pre-processing cleansing steps. See [scm/utilities/](scm/utitilies/) for some lightweight python cleansing tools.
+If the data is already cleansed, use the flag `-c` to skip the pre-processing cleansing steps. See [scm/utilities/](https://github.com/jg-you/scm/tree/master/utilities) for some lightweight python cleansing tools.
 
 The full list of options for `mcmc_sampler`:
 
