@@ -38,7 +38,7 @@ int main(int argc, char const *argv[])
       "Burn-in time. Defaults to M log M, where M is the sum of degrees.")
   ("sampling_steps,t", po::value<unsigned int>(&sampling_steps),
       "Number of sampling steps.")
-  ("sampling_frequency,f", po::value<unsigned int>(&sampling_frequency)->default_value(10),
+  ("sampling_frequency,f", po::value<unsigned int>(&sampling_frequency),
       "Number of step between each sample. Defaults to M log M, where M is the sum of degrees.")
   ("seed,d", po::value<unsigned int>(&seed),
       "Seed of the pseudo random number generator (Mersenne-twister 19937). Seed with time if not specified.")
@@ -150,9 +150,9 @@ int main(int argc, char const *argv[])
     else if (var_map.count("pl_prop")) {std::clog << "power law\n";}
     else {std::clog << "uniform\n";}
     std::clog << "\tprop_param: " << prop_param << "\n";
-    std::clog << "\tsanitize: ";
-    if (var_map.count("cleansed_input")) {std::clog << "no\n";}
-    else {std::clog << " yes\n";}
+    std::clog << "\tcleansed_input: ";
+    if (var_map.count("cleansed_input")) {std::clog << "yes\n";}
+    else {std::clog << " no\n";}
   }
   // Burn-in
   if (var_map.count("verbose")) std::clog << "Burn-in in progress\n";
