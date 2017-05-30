@@ -1,5 +1,6 @@
-// Simplicial configuration model class headers
 // Author: Jean-Gabriel Young <info@jgyoung.ca>
+// Simplicial configuration model class headers
+// Reference: https://arxiv.org/abs/1705.10298
 #ifndef SCM_H
 #define SCM_H
 

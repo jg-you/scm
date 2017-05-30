@@ -2,6 +2,7 @@
 // Author: Jean-Gabriel Young <info@jgyoung.ca>
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Simplicial Configuration Model MCMC sampler
+// Reference: https://arxiv.org/abs/1705.10298
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STL
 #include <cstdlib>   // EXIT_FAILURE, EXIT_SUCCESS

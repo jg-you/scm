@@ -3,7 +3,7 @@
 ![](img/scm.png)
 
 The Simplicial Configuration Model is random [null model](https://en.wikipedia.org/wiki/Null_model) for [simplicial complexes](https://en.wikipedia.org/wiki/Simplicial_complex), mathematical objects which can be seen as high-order generalizations of [simple graphs](http://mathworld.wolfram.com/SimpleGraph.html) (they incorporate multi-node interactions).
-This repository contains a C++ reference implementation of a [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [arxiv:17xx.yyyy](https://arxiv.org/abs/17xx.yyyy) for more information.<br/>
+This repository contains a C++ reference implementation of a [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [arxiv:1705.10298](https://arxiv.org/abs/1705.10298) for more information.<br/>
 A summary of compilation / usage instructions can be found below; but see the [tutorial](tutorial_notebook.ipynb) if you are looking for detailed instructions and examples.
 
 ## Table of content
@@ -41,7 +41,7 @@ We thus provide not one, but two important binaries: `rejection_sampler` and `mc
 
 ### Rejection sampler
 
-The rejection method is a very **inefficient** sampler for the SCM, see our [paper](https://arxiv.org/abs/17xx.yyyy).
+The rejection method is a very **inefficient** sampler for the SCM, see our [paper](https://arxiv.org/abs/1705.10298).
 However, since there is---so far---no known constructive procedure to generate SCM instances directly from sequences, it can be used to find **one** instance, which is then plugged into the much more efficient [MCMC sampler](#mcmc-sampler) as an initial condition.
 
 There are two ways to call `bin/rejection_sampler`.<br>
@@ -100,7 +100,7 @@ Here, `-f 10000` specifies that 10000 MCMC move will be applied between each sam
 
 *Note*: All the above commands have sensible default values and can be omitted.
 
-By default the sampler uses the uniform proposal distribution with L_max = 2 max s,  [see the paper](https://arxiv.org/abs/17xx), but the behavior can be changed.
+By default the sampler uses the uniform proposal distribution with L_max = 2 max s,  [see the paper](https://arxiv.org/abs/1705.10298), but the behavior can be changed.
 We provide two parameterizable proposal distributions, and it is straightforward to implement additional ones.
 
 The provided distributions are 
@@ -151,4 +151,4 @@ Please cite:
 
 "*Construction of and efficient sampling from the simplicial configuration model*"<br/>
 [J.-G. Young](http://jgyoung.ca), [G. Petri](https://github.com/lordgrilo), F. Vaccarino, and [A. Patania](https://github.com/alpatania) (2017)<br/>
-[arxiv:17xx.yyyy](https://arxiv.org/abs/17xx.yyyy)
+[arxiv:1705.10298](https://arxiv.org/abs/1705.10298)
