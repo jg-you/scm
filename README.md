@@ -1,4 +1,4 @@
-# scm
+# scm [![Build Status](https://travis-ci.org/jg-you/scm.svg?branch=master)](https://travis-ci.org/jg-you/scm)
 
 ![](img/scm.png)
 
