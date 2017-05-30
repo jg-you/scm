@@ -1,0 +1,27 @@
+language: cpp
+os:
+  - linux
+  - osx
+compiler: 
+  - gcc
+  - clang
+cache:
+  apt: true
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise
+      - ubuntu-toolchain-r-test
+      - boost-latest
+    packages:
+      - clang-3.7
+      - g++-4.7
+      - gcc-4.7
+      - libboost1.55-all-dev
+notifications:
+  email: false
+script: 
+  - cmake .; make; bin/rejection_sampler datasets/simple_facet_list.txt;
+  - cmake .; make; bin/rejection_sampler datasets/olesen_2002.txt 
+  - cmake .; make; bin/mcmc_sampler datasets/simple_facet_list.txt -t 2;
+  - cmake .; make; bin/mcmc_sampler datasets/olesen_2002.txt -t 2; 
