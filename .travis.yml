@@ -22,6 +22,4 @@ notifications:
   email: false
 script: 
   - cmake .; make; bin/rejection_sampler datasets/simple_facet_list.txt;
-  - cmake .; make; bin/rejection_sampler datasets/olesen_2002.txt 
-  - cmake .; make; bin/mcmc_sampler datasets/simple_facet_list.txt -t 2;
   - cmake .; make; bin/mcmc_sampler datasets/olesen_2002.txt -t 2; 
