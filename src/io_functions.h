@@ -1,4 +1,5 @@
 // Author: Jean-Gabriel Young <info@jgyoung.ca>
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #ifndef IO_FUNCTIONS
 #define IO_FUNCTIONS
 
