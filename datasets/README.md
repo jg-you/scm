@@ -1,6 +1,6 @@
 # Dataset information
 
-Facet lists for the datasets analyzed in [arxiv:1705.10298](https://arxiv.org/abs/1705.10298), as well as two simple examples (`simple_facet_list.txt` and `olesen_2002.txt`).
+Facet lists for the datasets analyzed in [[Phys. Rev. E, **96**, 032312 (2017)]](https://arxiv.org/abs/1705.10298), as well as two simple examples (`simple_facet_list.txt` and `olesen_2002.txt`).
 
 **Format**: One facet appears on each line, as whitespaced list of strings.<br>
 The sampler skips a lot of pre-processing if vertices are identified with contiguous 0 indexed integers (use the `--cleansed_input` flag).

@@ -1,6 +1,7 @@
 // Author: Jean-Gabriel Young <info@jgyoung.ca>
 // Simplicial Configuration Model sampler (rejection method)
-// Reference: https://arxiv.org/abs/1705.10298
+// Reference: https://doi.org/10.1103/PhysRevE.96.032312
+// arXiv link:  https://arxiv.org/abs/1705.10298
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // STL
 #include <cstdlib>   // EXIT_FAILURE, EXIT_SUCCESS

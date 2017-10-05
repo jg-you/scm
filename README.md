@@ -3,7 +3,7 @@
 ![](img/scm.png)
 
 The Simplicial Configuration Model is random [null model](https://en.wikipedia.org/wiki/Null_model) for [simplicial complexes](https://en.wikipedia.org/wiki/Simplicial_complex), mathematical objects which can be seen as high-order generalizations of [simple graphs](http://mathworld.wolfram.com/SimpleGraph.html) (they incorporate multi-node interactions).
-This repository contains a C++ reference implementation of a [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [arxiv:1705.10298](https://arxiv.org/abs/1705.10298) for more information.<br/>
+This repository contains a C++ reference implementation of a [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampler for this model, see [[Phys. Rev. E, **96**, 032312 (2017)]](https://arxiv.org/abs/1705.10298) for more information.<br/>
 A summary of compilation / usage instructions can be found below; but see the [tutorial](tutorial_notebook.ipynb) if you are looking for detailed instructions and examples.
 
 ## Table of content
@@ -151,4 +151,6 @@ Please cite:
 
 "*Construction of and efficient sampling from the simplicial configuration model*"<br/>
 [J.-G. Young](http://jgyoung.ca), [G. Petri](https://github.com/lordgrilo), F. Vaccarino, and [A. Patania](https://github.com/alpatania) (2017)<br/>
-[arxiv:1705.10298](https://arxiv.org/abs/1705.10298)
+Phys. Rev. E, **96**, 032312 (2017) <br/>
+
+Read it on: [arXiv](https://arxiv.org/abs/1705.10298) | [Phys. Rev. E](https://doi.org/10.1103/PhysRevE.96.032312)
