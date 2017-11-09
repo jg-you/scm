@@ -150,7 +150,9 @@ The full list of options for `mcmc_sampler`:
 Please cite:
 
 "*Construction of and efficient sampling from the simplicial configuration model*"<br/>
-[J.-G. Young](http://jgyoung.ca), [G. Petri](https://github.com/lordgrilo), F. Vaccarino, and [A. Patania](https://github.com/alpatania) (2017)<br/>
+[J.-G. Young](http://jgyoung.ca), [G. Petri](https://github.com/lordgrilo), F. Vaccarino, and [A. Patania](https://github.com/alpatania)<br/>
 Phys. Rev. E, **96**, 032312 (2017) <br/>
+
+
 
 Read it on: [arXiv](https://arxiv.org/abs/1705.10298) | [Phys. Rev. E](https://doi.org/10.1103/PhysRevE.96.032312)
