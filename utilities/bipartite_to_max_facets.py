@@ -17,7 +17,7 @@ def read_edge_list(path):
     with open(path, 'r') as f:
         edge_list = set()
         for line in f:
-            if not line.lstrip().startswith("%"):  # ignore commets
+            if not line.lstrip().startswith("%"):  # ignore comments
                 e = line.strip().split()
                 edge_list.add((int(e[0]) - 1, int(e[1]) - 1))  # 0 index
         return list(edge_list)
@@ -51,6 +51,7 @@ def facet_generator(sorted_edge_list, facet_col=0):
             facet_content.clear()
         facet_content.append(e[vertex_col])
         prev_facet = curr_facet
+    yield facet_content
 
 
 if __name__ == '__main__':
