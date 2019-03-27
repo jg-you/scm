@@ -29,8 +29,8 @@ The resulting binaries will be built in `bin/`. `CMakes` should also allow Windo
 If `cmake` is not installed, the following manual compilation lines *should* work (for gcc with `C++11` support):
 
     g++ -std=c++11 -o3 -c src/scm/scm.cpp -o src/scm/libscm.a  #compile scm library
-    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/mcmc_sampler mcmc_sampler.cpp  #compile the main binaries (mcmc)
-    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/rejection_sampler rejection_sampler.cpp  #compile the main binaries (rejection)
+    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/mcmc_sampler src/mcmc_sampler.cpp  #compile the main binaries (mcmc)
+    g++ -std=c++11 -o3 -L src/scm/ -lboost_program_options -l scm -o bin/rejection_sampler src/rejection_sampler.cpp  #compile the main binaries (rejection)
 
 
 ## Using the sampler
