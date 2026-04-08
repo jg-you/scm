@@ -30,8 +30,7 @@ int main(int argc, char const *argv[])
   std::string facet_list_path;
   std::string degree_seq_file;
   std::string size_seq_file;
-  unsigned int num_samples;
-  unsigned int seed;
+  unsigned int seed = 0;
 
   po::options_description description("Options");
   description.add_options()

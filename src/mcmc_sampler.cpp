@@ -26,9 +26,9 @@ int main(int argc, char const *argv[])
 {
   /* ~~~~~ Program options ~~~~~~~*/
   std::string facet_list_path;
-  unsigned int burn_in;
-  unsigned int sampling_steps;
-  unsigned int sampling_frequency;
+  unsigned int burn_in = 0;
+  unsigned int sampling_steps = 0;
+  unsigned int sampling_frequency = 0;
   unsigned int seed = 0;
   unsigned int L_max = 0;
   float prop_param = 1;
@@ -103,9 +103,9 @@ int main(int argc, char const *argv[])
   scm_t K(maximal_facets);
   std::mt19937 engine(seed);
   // prepare proposal distribution
-  if (!var_map.count("l_max")) 
+  if (!var_map.count("l_max"))
   {
-    L_max = std::min(std::max((unsigned int) 0.1 * K.M(), 2 * largest_facet), K.M());
+    L_max = std::min(std::max((unsigned int)(0.1 * K.M()), 2 * largest_facet), K.M());
   }
   if (L_max < 2 * largest_facet && var_map.count("l_max"))
   {
